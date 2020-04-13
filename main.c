@@ -64,13 +64,15 @@ int main(int argc, char *argv[]) {
 			// c variable is the variable that will hold the second argument when ls is being called 
 			char c[100];
 			
-			if(t == ' '){
+			if(t == ' '){	
 				scanf("%s",c);
-				printf("second command: %s\n",c);
+				printf("second command: %s\n",c);	
+				//show contents in the directory c...
 			}
-			else
-				printf("nothing entered with ls\n");
-
+			else{	
+				// show current working directory info
+				printf("nothing entered with ls.. \n so we need to show current directoty\n");
+			}
 
 		}
 		else if (strcmp(command, "cd") == 0) {
