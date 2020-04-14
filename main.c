@@ -68,7 +68,9 @@ int main(int argc, char *argv[]) {
 	unsigned  int offsetCluster;
 	while (strcmp(command, "exit") != 0) {
 		printf("$ ");
+		char temp = '\0';
 		scanf("%s", command);
+		temp = getchar();
 
 		if (strcmp(command, "info") == 0) {
 
@@ -160,8 +162,24 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		else if (strcmp(command, "cd") == 0) {
-
-			printf("cd entered\n");
+			char cmd2[100];
+			if(temp == ' '){
+				scanf("%s",cmd2);
+			
+				if(strcmp(cmd2,".") == 0){
+					//do nothing
+					printf("do nothing\n");
+				}
+				else if(strcmp(cmd2,"..") == 0){
+					//go back one directory
+					printf("go back one\n");
+				}
+				else
+					printf("change to directoty:  %s\n",cmd2);
+			}
+			else
+				printf("no second argument given\n");
+		
 		}
 		else if (strcmp(command, "creat") == 0) {
 
@@ -297,15 +315,11 @@ int clusterFromPath(char * name) {
 		printf("%s\n", incompletePath[i]);
 		while (1)
 		{
-
-
 			//offsetCluster = (rsv * capture3) + (capture2 * 4);
 			lseek(fileNumber, offset + (count * 32), SEEK_SET);
 			read(fileNumber, name, 32);
 			memcpy(&direct, name, sizeof(struct DirectoryEntry));
-
 			if (direct.DIR_Name[0] == 0x0) {
-
 				return -1;
 			}
 			else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
@@ -315,7 +329,6 @@ int clusterFromPath(char * name) {
 					printf("%d\n", incompletePath[i]);
 				break;
 				}
-
 		}
 	}
 	*/
