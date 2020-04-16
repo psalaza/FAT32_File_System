@@ -304,22 +304,25 @@ int main(int argc, char *argv[]) {
 				lseek(fileNumber, offsetCluster, SEEK_SET);
 				read(fileNumber, keep2, 4);
 				newCap2 = *(int*)keep2;
-
+				count = 0;
 				while (1)
 				{
 
-
-
-					lseek(fileNumber, offset + (count * 32), SEEK_SET);
+					lseek(fileNumber, offset2 + (count * 32), SEEK_SET);
 					read(fileNumber, name, 32);
 					memcpy(&direct, name, sizeof(struct DirectoryEntry));
 					one1 = strchr(direct.DIR_Name, ' ');
 					if (one1 != NULL && 11 > (one1 - direct.DIR_Name)) {
 						direct.DIR_Name[(one1 - direct.DIR_Name)] = '\0';
 					}
-
+					/*	printf("%s1\n", direct.DIR_Name);
+						if ((strcmp(direct.DIR_Name, cmd2) == 0)) {
+							printf("%s1\n", direct.DIR_Name);
+						}
+						else { printf("%s2\n", direct.DIR_Name); }
+						*/
 					if (direct.DIR_Name[0] == 0x0) {
-
+						//printf("%s\n", "This has a 0");
 						break;
 					}
 
@@ -343,7 +346,7 @@ int main(int argc, char *argv[]) {
 
 						if (((rootDir) == 0 && strcmp("..", cmd2) == 0)) {
 							capture2 = *(int*)bpb6;
-							//printf("%s", "HELLO3");
+							//	printf("%s", "HELLO3");
 						}
 						else
 						{
@@ -368,7 +371,7 @@ int main(int argc, char *argv[]) {
 				}
 			}
 
-			printf("cd entered\n");
+
 		}
 		else if (strcmp(command, "creat") == 0) {
 
