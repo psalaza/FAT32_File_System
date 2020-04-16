@@ -150,7 +150,15 @@ int main(int argc, char *argv[]) {
 
 					if (direct.DIR_Name[0] == 0x0) {
 						//	printf("%s", "HELLO4");
-						printf("%s\n", "File Does Not exist");
+						printf("%s\n", "Directory doesnt exist");
+						count3++;
+						break;
+					}
+
+
+					else if (direct.DIR_Attr == 0x20 && strcmp(direct.DIR_Name, cmd2) == 0) {
+						//	printf("%s", "HELLO4");
+						printf("%s\n", "This is a file");
 						count3++;
 						break;
 					}
@@ -237,7 +245,9 @@ int main(int argc, char *argv[]) {
 									if (count3 == 2) {
 										//break;
 									}
+
 									printf("%s\n", direct.DIR_Name);
+
 									//printf("%d\n", direct.DIR_FileSize);
 									//printf("%d\n", offset2 + count2 * 32);
 									//printf("%d\n", offsetCluster = (512 * 32) + ((direct.DIR_FstClusLO * 4)));
@@ -315,6 +325,12 @@ int main(int argc, char *argv[]) {
 
 					else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
 						count++;
+					}
+					else if (direct.DIR_Attr == 0x20 && strcmp(direct.DIR_Name, cmd2) == 0) {
+						//	printf("%s", "HELLO4");
+						printf("%s\n", "This is a file");
+						count3++;
+						break;
 					}
 					else if ((strcmp(direct.DIR_Name, cmd2) == 0)) {
 						if (strcmp("..", cmd2) == 0) {
