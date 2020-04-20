@@ -591,7 +591,180 @@ int main(int argc, char *argv[]) {
 			printf("creat entered\n");
 		}
 		else if (strcmp(command, "mkdir") == 0) {
+		int count = 0;
+		int count2 = 0;
+		int count3 = 0;
+		int count4 = 0;
+		int count5 = 0;
+		int k = 0;
+		int total = 0;
+		int offset2 = 0;
+		int offset3 = 0;
+		int offsetCluster2 = 0;
+		int dont = 0;
+		int wannabe = 0x0FFFFFF8;
+		char keep[4];
+		char keep2[4];
+		char keep5[4];
+		char keep6[32];
+		unsigned char stop[10000];
+		char picks[1000];
+		int free = 0;
+		//	printf("%s\n", "HELLO1");
+		memset(stop, '\0', sizeof(stop));
+		//memset(free, '\0', sizeof(free));
+		char * name2;
+		struct DirectoryEntry direct;
+		struct DirectoryEntry empty;
+		struct DirectoryEntry create;
+		struct DirectoryEntry holding;
+		unsigned char *one;
+		unsigned int newCap = capture2;
+		unsigned int newCap2 = capture2;
+		unsigned int newCap3 = 0;
+		int directoryOffset = 0;
+		unsigned char returning[32];
+		unsigned int firstCLUSter = 0;
+		unsigned int fileSize = 0;
+		int safe = 0;
 
+
+
+
+
+		if (temp != ' ') {
+
+		}
+		else {
+			printf("%s\n", "HELLO6	23123");
+			scanf("%s", cmd2);
+			while (1)
+			{
+				//
+				//printf("%s\n", "HELLO6	23123");
+				//	break;
+				offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap * 4));
+				offset2 = (((newCap - 2)*capture4) + fileSec)*capture3;
+				//offsetCluster = offsetCluster % capture3;
+				lseek(fileNumber, offsetCluster, SEEK_SET);
+				read(fileNumber, keep, 4);
+				//	printf("it is =%d\n", offsetCluster);
+
+					//printf("it is =%d\n", capture3);
+					//break;
+
+
+
+				newCap = *(int*)keep;
+
+
+
+
+
+				//printf("it is the count=%d\n", total);
+				count3 = 0;
+
+				count2 = 0;
+				while (1)
+				{
+					//printf("%s\n", "HELLO7");
+					//	printf("%s", "HELLO5");
+						//printf("%d\n", offset2);
+					lseek(fileNumber, offset2 + (count2 * 32), SEEK_SET);
+
+					read(fileNumber, name, 32);
+					memcpy(&direct, name, sizeof(struct DirectoryEntry));
+					one = strchr(direct.DIR_Name, ' ');
+					if (count2 * 32 >= bob.BPB_BytsPerSe) {
+						break;
+					}
+					if (one != NULL && 11 > (one - direct.DIR_Name)) {
+						direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
+					}
+
+					if (direct.DIR_Name[0] == 0x0 && count2 * 32 < bob.BPB_BytsPerSe) {
+						directoryOffset = offset2 + (count2 * 32);
+						count4++;
+						break;
+					}
+					else if (direct.DIR_Name[0] == 0xE5) {
+						directoryOffset = offset2 + (count2 * 32);
+						count4++;
+						break;
+						//count2++;
+					}
+					else {
+						if (strcmp(direct.DIR_Name, ".") == 0) {
+							//count3++;
+						}
+						if (count3 == 2) {
+							//break;
+						}
+
+						count2++;
+					}
+
+				}
+				if (count4 != 0) {
+
+					count4 = 0; break;
+				}
+				else if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
+					//	printf("it is4 =%d\n", offsetCluster);
+					for (k = 0; 1; k++) {
+						offsetCluster2 = (bob.BPB_BytsPerSe * 32) + (((*(int*)bpb6 + k) * 4));
+						//printf("%s %d\n", "HELLO1", k);
+						lseek(fileNumber, offsetCluster2, SEEK_SET);
+						read(fileNumber, keep5, 4);
+						if (*(int*)keep5 == 0) {
+							//	printf("%s %d\n", "HELLO2bb", k);
+							lseek(fileNumber, offsetCluster2, SEEK_SET);
+							write(fileNumber, &wannabe, 4);
+							lseek(fileNumber, offsetCluster, SEEK_SET);
+							directoryOffset = (((k - 2)*capture4) + fileSec)*capture3;
+							write(fileNumber, &k, 4);
+							newCap = k;
+							count3++;
+							break;
+
+						}
+					}
+					break;
+				}
+
+
+				//printf("%d\n", count3);
+			}
+			//printf("cp entered\n");
+			strncpy(create.DIR_Name, cmd2, 8);
+			unsigned short high = firstCLUSter >> 16;
+			unsigned short low = ((firstCLUSter << 16) >> 16);
+			create.DIR_Attr = 0X10;
+			create.DIR_FileSize = 0;
+			offset = (((low - 2)*capture4) + fileSec)*capture3;
+			//printf("%d\n", offset);
+			//printf("%d\n", low);
+			create.DIR_FstClusHI = high;
+			create.DIR_FstClusLO = low;
+			lseek(fileNumber, directoryOffset, SEEK_SET);
+
+			memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+			//memset(keep6);
+			write(fileNumber, keep6, 32);
+
+		 
+		strncpy(create.DIR_Name, ".", 8);
+		 offset2 = (((firstCLUSter - 2)*capture4) + fileSec)*capture3;
+		 lseek(fileNumber, offset2, SEEK_SET);
+		 memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+		 write(fileNumber, keep6, 32);
+		strncpy(create.DIR_Name, "..", 8);
+		create.DIR_FstClusHI = capture2 >> 16;
+		create.DIR_FstClusLO = ((capture2<< 16) >> 16);
+		write(fileNumber, keep6, 32);
+
+
+		}
 			printf("mkdir entered\n");
 		}
 		else if (strcmp(command, "mv") == 0) {
