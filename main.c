@@ -117,8 +117,8 @@ int main(int argc, char *argv[]) {
 
 			capture = *(int*)bpb6;
 			printf("FAT Root Cluster: %d\n", capture);
-			//offset = (((587 - 2)*capture4) + fileSec) * capture3;
-			//printf("%d", offset);
+			offset = (((587 - 2)*capture4) + fileSec) * capture3;
+			printf("%d", offset);
 
 		}
 		else if (strcmp(command, "ls") == 0) {
@@ -1767,7 +1767,7 @@ int main(int argc, char *argv[]) {
 						if ((direct.DIR_Name[0] == 0x0) || (rootDir == 0 && strcmp("..", picks) == 0)) {
 							//printf("stuck4\n");
 							//printf("%s\n", "HELLO4");
-							printf("%s\n", "Directory doesnt exist");
+							//printf("%s\n", "Directory doesnt exist");
 							count3++;
 							break;
 						}
@@ -1776,6 +1776,7 @@ int main(int argc, char *argv[]) {
 						else if (direct.DIR_Attr == 0x20 && strcmp(direct.DIR_Name, picks) == 0) {
 							//	printf("%s", "HELLO4");
 							printf("%s\n", "This is a file");
+							dont = 1;
 							count3++;
 							break;
 						}
