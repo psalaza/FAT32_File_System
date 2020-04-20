@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
 								}
 
 								if (direct.DIR_Name[0] == 0x0) {
-								//	printf("O\n");
+									//	printf("O\n");
 									break;
 								}
 								else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
@@ -431,6 +431,7 @@ int main(int argc, char *argv[]) {
 			int total = 0;
 			int offset2 = 0;
 			int offset3 = 0;
+			int directory = 0;
 			int offsetCluster2 = 0;
 			int wannabe = 0x0FFFFFF8;
 			char keep[4];
@@ -499,7 +500,9 @@ int main(int argc, char *argv[]) {
 						}
 						if ((direct.DIR_Name[0] == 0x0) || (rootDir == 0 && strcmp("..", picks) == 0)) {
 							//	printf("%s", "HELLO4");
-							printf("%s\n", "Directory does1nt exist");
+							file = 2;
+
+							//printf("%s\n", "Directory doesnt exist");
 							count3++;
 							break;
 						}
@@ -669,7 +672,7 @@ int main(int argc, char *argv[]) {
 
 				count3 = 0;
 
-				while (file != 1)
+				while (1)
 				{
 
 					//	printf("%s", "HELLO1");
@@ -699,13 +702,13 @@ int main(int argc, char *argv[]) {
 						//printf("%s1\n", direct.DIR_Name);
 						if ((direct.DIR_Name[0] == 0x0) || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
-							printf("%s\n", "Directory doesnt exist");
+							printf("%s\n", "Directory/File doesnt exist");
 							count3++;
 							break;
 						}
 
 						if (count * 32 >= bob.BPB_BytsPerSe) {
-							printf("%s\n", "Directory doesnt exist");
+							//printf("%s\n", "Directory doesnt exist");
 							break;
 						}
 
@@ -715,6 +718,11 @@ int main(int argc, char *argv[]) {
 						}
 						else if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
 							//printf("%s\n",cmd2);
+							if (direct.DIR_Attr == 0x10 && strcmp(direct.DIR_Name, cmd2) == 0) {
+								directory = 1;
+								count3++;
+								break;
+							}
 
 							safe = 1;
 							//		printf("%d\n", direct.DIR_FstClusHI);
@@ -851,10 +859,16 @@ int main(int argc, char *argv[]) {
 
 
 
+				if (file == 1 && directory == 1) {
 
-				if (file == 1) {
+					printf("%s\n", "You can't put a file into a directory");
+				}
+				else if (file == 1) {
 
-					strncpy(direct.DIR_Name, cmd2, 8);
+					printf("%s\n", "This is another files name");
+				}
+				else if (file == 2) {
+					strncpy(direct.DIR_Name, picks, 8);
 					lseek(fileNumber, directoryOffset2, SEEK_SET);
 					memcpy(returning, &direct.DIR_Name, sizeof(struct DirectoryEntry));
 					write(fileNumber, returning, 32);
@@ -872,6 +886,7 @@ int main(int argc, char *argv[]) {
 					lseek(fileNumber, directoryOffset, SEEK_SET);
 					write(fileNumber, name, 32);
 				}
+
 				printf("mv entered %d\n", directoryOffset);
 				printf("mv entered %d\n", directoryOffset2);
 
@@ -1305,7 +1320,7 @@ int main(int argc, char *argv[]) {
 								//printf("%s", "HELLO19");
 								count2 = 0;
 								if (strlen(string) < sizeRead) {
-								//	printf("%s", "HELLO5");
+									//	printf("%s", "HELLO5");
 									for (k = strlen(string); k < sizeRead; k++) {
 										//	printf("it is the count=%d\n", strlen(string));
 										string[k] = (char)0;
@@ -1960,7 +1975,7 @@ int main(int argc, char *argv[]) {
 							//printf("%s\n",cmd2);
 						//	printf("%s\n", "HELLO5");
 							if (safe == 1) {
-							//	printf("%s\n", "HELLO80");
+								//	printf("%s\n", "HELLO80");
 								safe = 2;
 							}
 							else {
