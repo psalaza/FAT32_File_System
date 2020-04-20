@@ -117,8 +117,8 @@ int main(int argc, char *argv[]) {
 
 			capture = *(int*)bpb6;
 			printf("FAT Root Cluster: %d\n", capture);
-			offset = (((587 - 2)*capture4) + fileSec) * capture3;
-			printf("%d", offset);
+			//offset = (((587 - 2)*capture4) + fileSec) * capture3;
+			//printf("%d", offset);
 
 		}
 		else if (strcmp(command, "ls") == 0) {
