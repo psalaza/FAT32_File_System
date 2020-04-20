@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
 								}
 
 								if (direct.DIR_Name[0] == 0x0) {
-									printf("O\n");
+								//	printf("O\n");
 									break;
 								}
 								else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
@@ -459,13 +459,13 @@ int main(int argc, char *argv[]) {
 			unsigned int fileSize;
 			int file = 0;
 			int safe = 0;
-			printf("%s\n", "HELLO1");
+			//printf("%s\n", "HELLO1");
 			if (temp != ' ') {
 
 			}
 			else {
 				scanf("%s %s", cmd2, picks);
-				printf("%s\n", "HELLO2");
+				//printf("%s\n", "HELLO2");
 				while (1)
 				{
 
@@ -493,7 +493,7 @@ int main(int argc, char *argv[]) {
 							direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
 
 						}
-						printf("%s\n", direct.DIR_Name);
+						//printf("%s\n", direct.DIR_Name);
 						if (count * 32 >= bob.BPB_BytsPerSe) {
 							break;
 						}
@@ -696,7 +696,7 @@ int main(int argc, char *argv[]) {
 							direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
 
 						}
-						printf("%s1\n", direct.DIR_Name);
+						//printf("%s1\n", direct.DIR_Name);
 						if ((direct.DIR_Name[0] == 0x0) || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
 							printf("%s\n", "Directory doesnt exist");
@@ -1302,10 +1302,10 @@ int main(int argc, char *argv[]) {
 								//   printf("it is the count=%d\n", total);
 									//printf("%d\n", offsetSize);
 								//	printf("%d\n", sizeRead);
-								printf("%s", "HELLO19");
+								//printf("%s", "HELLO19");
 								count2 = 0;
 								if (strlen(string) < sizeRead) {
-									printf("%s", "HELLO5");
+								//	printf("%s", "HELLO5");
 									for (k = strlen(string); k < sizeRead; k++) {
 										//	printf("it is the count=%d\n", strlen(string));
 										string[k] = (char)0;
@@ -1709,16 +1709,16 @@ int main(int argc, char *argv[]) {
 			unsigned int firstCLUSter;
 			unsigned int fileSize;
 			int safe = 0;
-			printf("%s\n", "HELLO1");
+			//printf("%s\n", "HELLO1");
 			if (temp != ' ') {
 
 			}
 			else {
 				scanf("%s %s", cmd2, picks);
-				printf("%s\n", "HELLO2");
+				//printf("%s\n", "HELLO2");
 				while (1)
 				{
-					printf("%s\n", "HELLO3");
+					//printf("%s\n", "HELLO3");
 					//	printf("%s", "HELLO1");
 					offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap2 * 4));
 					offset2 = (((newCap2 - 2)*capture4) + fileSec)*capture3;
@@ -1766,7 +1766,7 @@ int main(int argc, char *argv[]) {
 						}
 						else if (strcmp(direct.DIR_Name, picks) == 0 || strcmp("", picks) == 0 || ((rootDir - 1) == 0 && strcmp("..", picks) == 0) || ((rootDir) == 0 && strcmp(".", picks) == 0)) {
 							//printf("%s\n",cmd2);
-							printf("%s\n", "HELLO5");
+							//printf("%s\n", "HELLO5");
 							safe = 1;
 							//		printf("%d\n", direct.DIR_FstClusHI);
 							//		printf("%d\n", direct.DIR_FstClusLO);
@@ -1901,7 +1901,7 @@ int main(int argc, char *argv[]) {
 					}
 				}
 				count3 = 0;
-				printf("%d\n", directoryOffset);
+				//printf("%d\n", directoryOffset);
 				newCap = capture2;
 				newCap2 = capture2;
 				newCap3 = 0;
@@ -1958,9 +1958,9 @@ int main(int argc, char *argv[]) {
 						}
 						else if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
 							//printf("%s\n",cmd2);
-							printf("%s\n", "HELLO5");
+						//	printf("%s\n", "HELLO5");
 							if (safe == 1) {
-								printf("%s\n", "HELLO80");
+							//	printf("%s\n", "HELLO80");
 								safe = 2;
 							}
 							else {
