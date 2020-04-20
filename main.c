@@ -1547,7 +1547,7 @@ int main(int argc, char *argv[]) {
 						}
 						if (direct.DIR_Name[0] == 0x0 || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
-							printf("%s %d %s\n", "Directory doesnt exist", rootDir, cmd2);
+							printf("%s %d %s\n", "File doesnt exist", rootDir, cmd2);
 							count3++;
 							break;
 						}
@@ -1555,7 +1555,7 @@ int main(int argc, char *argv[]) {
 
 						else if (direct.DIR_Attr == 0x10 && strcmp(direct.DIR_Name, cmd2) == 0) {
 							//	printf("%s", "HELLO4");
-							printf("%s\n", "This is a file");
+							printf("%s\n", "This is a Directory");
 							count3++;
 							break;
 						}
