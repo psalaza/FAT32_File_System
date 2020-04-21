@@ -1296,11 +1296,11 @@ int main(int argc, char *argv[]) {
 
 				int i = 0;
 
-				for (i = 0; file_name[i] != '\0'; i++) {
+				/*for (i = 0; file_name[i] != '\0'; i++) {
 					if (file_name[i] >= 'a' && file_name[i] <= 'z') {
 						file_name[i] = file_name[i] - 32;
 					}
-				}
+				}*/
 				//OpenFile(file_name, input_mode);
 			}
 			else {
@@ -1716,12 +1716,12 @@ int main(int argc, char *argv[]) {
 			unsigned char *one;
 			unsigned int newCap = capture2;
 			unsigned int newCap2 = capture2;
-
+			char pointless[100];
 			if (temp != ' ') {
 
 			}
 			else {
-				scanf("%s %s %s %[^\n\r]", cmd2, keep3, keep4, string);
+				scanf("%s %s %s \"%[^\"]%[^\n]", cmd2, keep3, keep4, string, pointless);
 
 				offsetSize = atoi(keep3);
 				sizeRead = atoi(keep4);
@@ -1872,9 +1872,9 @@ int main(int argc, char *argv[]) {
 
 									//printf("%d", sizeRead);
 									if (bob.BPB_BytsPerSe < sizeRead + offsetSize) {
-										//	name2 = (char*)malloc((513 - offsetSize) * sizeof(char));
+										//name2 = (char*)malloc((513 - offsetSize) * sizeof(char));
 
-											//printf("%s", "HELLO7");
+										//printf("%s", "HELLO7");
 										sizeRead = sizeRead - (bob.BPB_BytsPerSe - offsetSize);
 										memcpy(name2, &string[offset3], (bob.BPB_BytsPerSe - offsetSize));
 										offset3 += (bob.BPB_BytsPerSe - offsetSize);
@@ -2413,7 +2413,7 @@ int main(int argc, char *argv[]) {
 									count4 = 0; break;
 								}
 								else if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
-									printf("it is4 1 =%d\n", offsetCluster);
+									//printf("it is4 1 =%d\n", offsetCluster);
 									for (k = 0; 1; k++) {
 										offsetCluster2 = (bob.BPB_BytsPerSe * 32) + (((*(int*)bpb6 + k) * 4));
 										lseek(fileNumber, offsetCluster2, SEEK_SET);
@@ -2582,7 +2582,7 @@ int main(int argc, char *argv[]) {
 									lseek(fileNumber, offsetCluster, SEEK_SET);
 									read(fileNumber, keep, 4);
 									newCap = *(int*)keep;
-									printf("%d\n", offsetCluster);
+									//	printf("%d\n", offsetCluster);
 									lseek(fileNumber, offset2, SEEK_SET);
 									read(fileNumber, stop, bob.BPB_BytsPerSe);
 									//	printf("%d this is not a life",*(int*)keep);
@@ -2798,6 +2798,7 @@ int main(int argc, char *argv[]) {
 
 		else
 			printf("invalid command, try again...\n");
+
 
 		memset(cmd2, 0, sizeof(cmd2));
 	}
