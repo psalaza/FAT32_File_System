@@ -1381,6 +1381,9 @@ int main(int argc, char *argv[]) {
 		                }
 		                count2++;
 		              }
+									else {
+										fprintf(stderr, "%s is not a FILENAME\n", file_name);
+									}
 		              count2++;
 		            }
 		          }
