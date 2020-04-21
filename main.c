@@ -1092,7 +1092,7 @@ int main(int argc, char *argv[]) {
 						}
 
 						else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
-							//printf("%s", "HELLO5"); 
+							//printf("%s", "HELLO5");
 							count++;
 						}
 						else if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
@@ -1405,9 +1405,6 @@ int main(int argc, char *argv[]) {
 											continue;
 										}
 										count2++;
-									}
-									else {
-										fprintf(stderr, "%s is not a FILENAME\n", file_name);
 									}
 									count2++;
 								}
