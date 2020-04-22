@@ -17,6 +17,7 @@ struct DirectoryEntry {
 	unsigned short DIR_WrtDate;
 	unsigned short DIR_FstClusLO;
 	unsigned int DIR_FileSize;
+	unsigned int DIR_Mode;
 } __attribute((packed));
 struct BPBEntry {
 	char BPB[11];
@@ -1294,142 +1295,189 @@ int main(int argc, char *argv[]) {
 			if (strcmp(input_mode, "r") == 0 || strcmp(input_mode, "w") == 0 ||
 				strcmp(input_mode, "rw") == 0 || strcmp(input_mode, "wr") == 0) {
 
-				int i = 0;
+					int count = 0;
+					int count2 = 0;
+					int count3 = 0;
+					int total = 0;
+					int offset2 = 0;
+					char keep[4];
+					char keep2[4];
+					struct DirectoryEntry direct;
+					unsigned char *one;
+					unsigned int newCap = capture2;
+					unsigned int newCap2 = capture2;
 
-				/*for (i = 0; file_name[i] != '\0'; i++) {
-					if (file_name[i] >= 'a' && file_name[i] <= 'z') {
-						file_name[i] = file_name[i] - 32;
+					strcpy(cmd2, "");
+
+					while (1)
+					{
+						offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap2 * 4));
+						offset2 = (((newCap2 - 2)*capture4) + fileSec)*capture3;
+						lseek(fileNumber, offsetCluster, SEEK_SET);
+						read(fileNumber, keep2, 4);
+						newCap = *(int*)keep2;
+						count = 0;
+						while (1)
+						{
+							lseek(fileNumber, offset + (count * 32), SEEK_SET);
+							read(fileNumber, name, 32);
+							memcpy(&direct, name, sizeof(struct DirectoryEntry));
+							one = strchr(direct.DIR_Name, ' ');
+							if (one != NULL && 11 > (one - direct.DIR_Name)) {
+								direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
+
+							}
+							if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
+								if (strcmp("", cmd2) == 0) {
+									newCap = capture2;
+								}
+								while (1)
+								{
+									offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap * 4));
+									offset2 = (((newCap - 2)*capture4) + fileSec)*capture3;
+									lseek(fileNumber, offsetCluster, SEEK_SET);
+									read(fileNumber, keep, 4);
+									newCap = *(int*)keep;
+									count3 = 0;
+									count2 = 0;
+									while (1)
+									{
+										lseek(fileNumber, offset2 + (count2 * 32), SEEK_SET);
+										read(fileNumber, name, 32);
+										memcpy(&direct, name, sizeof(struct DirectoryEntry));
+										one = strchr(direct.DIR_Name, ' ');
+										if (count2 * 32 >= bob.BPB_BytsPerSe) {
+											break;
+										}
+										if (one != NULL && 11 > (one - direct.DIR_Name)) {
+											direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
+										}
+										if (direct.DIR_Name[0] == 0x0) {
+											break;
+										}
+										else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
+											count2++;
+										}
+										else {
+											if (direct.DIR_Attr == 0x20 && (strcmp(direct.DIR_Name, file_name) == 0)) {
+												if (SearchOpenFiles(file_name) == MAX_OPEN_FILES) {
+													// File not opened
+
+													struct DirectoryEntry * newEntry;
+
+													newEntry = &openFiles.files[GetOpenFileSlot()];
+													//printf("Made it to here\n");
+													strcpy(newEntry->DIR_Name, direct.DIR_Name);
+													newEntry->DIR_Attr = direct.DIR_Attr;
+													newEntry->DIR_NTRes = direct.DIR_NTRes;
+													newEntry->DIR_CrtTimeTenth = direct.DIR_CrtTimeTenth;
+													newEntry->DIR_CrtTime = direct.DIR_CrtTime;
+													newEntry->DIR_CrtDate = direct.DIR_CrtDate;
+													newEntry->DIR_LstAccDate = direct.DIR_LstAccDate;
+													newEntry->DIR_FstClusHI = direct.DIR_FstClusHI;
+													newEntry->DIR_WrtTime = direct.DIR_WrtTime;
+													newEntry->DIR_WrtDate = direct.DIR_WrtDate;
+													newEntry->DIR_FstClusLO = direct.DIR_FstClusLO;
+													newEntry->DIR_FileSize = direct.DIR_FileSize;
+													if (strcmp(input_mode, "r") == 0) {
+														direct.DIR_Mode = 1;
+													}
+													else if (strcmp(input_mode, "w") == 0) {
+														direct.DIR_Mode = 2;
+													}
+													else if (strcmp(input_mode, "rw") == 0){
+														direct.DIR_Mode = 3;
+													}
+													else if (strcmp(input_mode, "wr") == 0){
+														direct.DIR_Mode = 4;
+													}
+													else {
+														printf("MODE INPUT ERROR\n");
+													}
+													newEntry->DIR_Mode = direct.DIR_Mode;
+													openFiles.count++;
+
+													printf("%s successfully opened\n", newEntry->DIR_Name);
+												}
+												else {
+													// File already exists
+													fprintf(stderr, "%s already has been opened\n", file_name);
+													continue;
+												}
+												count2++;
+											}
+											count2++;
+										}
+									}
+									if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
+										break;
+									}
+								}
+								count3++;
+								break;
+							}
+							else {
+								count++;
+							}
+						}
+						if (*(int*)keep2 == 0x0FFFFFFF || *(int*)keep2 == 0x0FFFFFFE || *(int*)keep2 == 0x0FFFFFF8 || count3 != 0) {
+							break;
+						}
 					}
-				}*/
-				//OpenFile(file_name, input_mode);
 			}
 			else {
 				fprintf(stderr, "%s is not a valid mode input\n", input_mode);
 				continue;
 			}
 
-			int count = 0;
-			int count2 = 0;
-			int count3 = 0;
-			int total = 0;
-			int offset2 = 0;
-			char keep[4];
-			char keep2[4];
-			struct DirectoryEntry direct;
-			unsigned char *one;
-			unsigned int newCap = capture2;
-			unsigned int newCap2 = capture2;
-
-			strcpy(cmd2, "");
-
-			while (1)
-			{
-				offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap2 * 4));
-				offset2 = (((newCap2 - 2)*capture4) + fileSec)*capture3;
-				lseek(fileNumber, offsetCluster, SEEK_SET);
-				read(fileNumber, keep2, 4);
-				newCap = *(int*)keep2;
-				count = 0;
-				while (1)
-				{
-					lseek(fileNumber, offset + (count * 32), SEEK_SET);
-					read(fileNumber, name, 32);
-					memcpy(&direct, name, sizeof(struct DirectoryEntry));
-					one = strchr(direct.DIR_Name, ' ');
-					if (one != NULL && 11 > (one - direct.DIR_Name)) {
-						direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
-
-					}
-					if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
-						if (strcmp("", cmd2) == 0) {
-							newCap = capture2;
-						}
-						while (1)
-						{
-							offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap * 4));
-							offset2 = (((newCap - 2)*capture4) + fileSec)*capture3;
-							lseek(fileNumber, offsetCluster, SEEK_SET);
-							read(fileNumber, keep, 4);
-							newCap = *(int*)keep;
-							count3 = 0;
-							count2 = 0;
-							while (1)
-							{
-								lseek(fileNumber, offset2 + (count2 * 32), SEEK_SET);
-								read(fileNumber, name, 32);
-								memcpy(&direct, name, sizeof(struct DirectoryEntry));
-								one = strchr(direct.DIR_Name, ' ');
-								if (count2 * 32 >= bob.BPB_BytsPerSe) {
-									break;
-								}
-								if (one != NULL && 11 > (one - direct.DIR_Name)) {
-									direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
-								}
-								if (direct.DIR_Name[0] == 0x0) {
-									break;
-								}
-								else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
-									count2++;
-								}
-								else {
-									if (direct.DIR_Attr == 0x20 && (strcmp(direct.DIR_Name, file_name) == 0)) {
-										if (SearchOpenFiles(file_name) == MAX_OPEN_FILES) {
-											// File not opened
-
-											struct DirectoryEntry * newEntry;
-
-											newEntry = &openFiles.files[GetOpenFileSlot()];
-											//printf("Made it to here\n");
-											strcpy(newEntry->DIR_Name, direct.DIR_Name);
-											newEntry->DIR_Attr = direct.DIR_Attr;
-											newEntry->DIR_NTRes = direct.DIR_NTRes;
-											newEntry->DIR_CrtTimeTenth = direct.DIR_CrtTimeTenth;
-											newEntry->DIR_CrtTime = direct.DIR_CrtTime;
-											newEntry->DIR_CrtDate = direct.DIR_CrtDate;
-											newEntry->DIR_LstAccDate = direct.DIR_LstAccDate;
-											newEntry->DIR_FstClusHI = direct.DIR_FstClusHI;
-											newEntry->DIR_WrtTime = direct.DIR_WrtTime;
-											newEntry->DIR_WrtDate = direct.DIR_WrtDate;
-											newEntry->DIR_FstClusLO = direct.DIR_FstClusLO;
-											newEntry->DIR_FileSize = direct.DIR_FileSize;
-											openFiles.count++;
-
-
-											//OpenFile(direct, input_mode);
-
-											printf("%s successfully opened\n", newEntry->DIR_Name);
-										}
-										else {
-											// File already exists
-											fprintf(stderr, "%s already has been opened\n", file_name);
-											continue;
-										}
-										count2++;
-									}
-									count2++;
-								}
-							}
-							if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
-								break;
-							}
-						}
-						count3++;
-						break;
-					}
-					else {
-						count++;
-					}
-				}
-				if (*(int*)keep2 == 0x0FFFFFFF || *(int*)keep2 == 0x0FFFFFFE || *(int*)keep2 == 0x0FFFFFF8 || count3 != 0) {
-					break;
-				}
-			}
-
 			PrintOpenFiles();
 		}
 		else if (strcmp(command, "close") == 0) {
 
-			printf("close entered\n");
+			char  file_name[20];
+			char  input_mode[3];
+
+			if (temp == ' ') {
+				scanf("%s %s", file_name, input_mode);
+			}
+
+			if (strcmp(input_mode, "r") == 0 || strcmp(input_mode, "w") == 0 ||
+				strcmp(input_mode, "rw") == 0 || strcmp(input_mode, "wr") == 0) {
+
+				int lookupIndex;
+				lookupIndex = SearchOpenFiles(file_name);
+				if (lookupIndex < MAX_OPEN_FILES) {
+					struct DirectoryEntry * newEntry;
+
+					newEntry = &openFiles.files[lookupIndex];
+					newEntry->DIR_Name[0] = '\0';
+					newEntry->DIR_Attr = '\0';
+					newEntry->DIR_NTRes = '\0';
+					newEntry->DIR_CrtTimeTenth = '\0';
+					newEntry->DIR_CrtTime = 0;
+					newEntry->DIR_CrtDate = 0;
+					newEntry->DIR_LstAccDate = 0;
+					newEntry->DIR_FstClusHI = 0;
+					newEntry->DIR_WrtTime = 0;
+					newEntry->DIR_WrtDate = 0;
+					newEntry->DIR_FstClusLO = 0;
+					newEntry->DIR_FileSize = 0;
+					newEntry->DIR_Mode = 0;
+					openFiles.count--;
+
+					printf("%s successfully closed\n", file_name);
+				}
+				else {
+					fprintf(stderr, "%s is not opened\n", file_name);
+				}
+			}
+			else {
+				fprintf(stderr, "%s is not a valid mode input\n", input_mode);
+				continue;
+			}
+
+			PrintOpenFiles();
+
 		}
 		else if (strcmp(command, "read") == 0) {
 			int count = 0;
