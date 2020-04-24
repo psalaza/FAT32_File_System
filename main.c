@@ -1568,6 +1568,7 @@ int main(int argc, char *argv[]) {
 						if (direct.DIR_Name[0] == 0x0 || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
 							printf("%s \n", "File doesnt exist");
+							srlCheck = 1;
 							count3++;
 							break;
 						}
@@ -1847,6 +1848,7 @@ int main(int argc, char *argv[]) {
 						}
 						if (direct.DIR_Name[0] == 0x0 || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
+							srlCheck = 1;
 							printf("%s\n", "File doesnt exist");
 							count3++;
 							break;
