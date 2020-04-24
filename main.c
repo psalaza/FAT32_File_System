@@ -50,7 +50,6 @@ unsigned int maxIndex;	// The maximum index of the open files
 
 int SearchOpenFiles(char * fname);
 int GetOpenFileSlot();
-void PrintOpenFiles();
 int clusterFromPath(char * name);
 int main(int argc, char *argv[]) {
 	openFiles.count = 0;
@@ -394,18 +393,18 @@ int main(int argc, char *argv[]) {
 							//break;
 							//printf("%s", "HELLO3");
 						}
-						else if (strcmp("..", cmd2) == 0) {
+						/*else if (strcmp("..", cmd2) == 0) {
 							capture2 = prevClus[size];
 							prevClus[size] = 0;
 							size--;
 							count3++;
 							//break;
-						}
+						}*/
 						else
 						{
-							size++;
+							//size++;
 							//	printf("%s", "HELLO4");
-							prevClus[size] = capture2;
+							//prevClus[size] = capture2;
 
 							capture2 = direct.DIR_FstClusLO + (direct.DIR_FstClusHI << 16);
 							count3++;
@@ -516,23 +515,31 @@ int main(int argc, char *argv[]) {
 						read(fileNumber, name, 32);
 						memcpy(&direct, name, sizeof(struct DirectoryEntry));
 						one = strchr(direct.DIR_Name, ' ');
-						if (count2 * 32 >= bob.BPB_BytsPerSe) {
-							break;
-						}
 						if (one != NULL && 11 > (one - direct.DIR_Name)) {
 							direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
 						}
+						if ((strcmp(direct.DIR_Name, cmd2) == 0) && direct.DIR_Attr == 0x20) {
+							printf("this File already exist\n");
+							safe = 1;
+							count4++;
+							break;
+						}
+						if (count2 * 32 >= bob.BPB_BytsPerSe) {
+							break;
+						}
 
-						if (direct.DIR_Name[0] == 0x0 && count2 * 32 < bob.BPB_BytsPerSe) {
-							directoryOffset = offset2 + (count2 * 32);
+						else if (direct.DIR_Name[0] == 0x0 && count2 * 32 < bob.BPB_BytsPerSe) {
+							if (directoryOffset == 0) {
+								directoryOffset = offset2 + (count2 * 32);
+							}
 							count4++;
 							break;
 						}
 						else if (direct.DIR_Name[0] == 0xE5) {
 							directoryOffset = offset2 + (count2 * 32);
-							count4++;
-							break;
-							//count2++;
+							//count4++;
+							//break;
+							count2++;
 						}
 						else {
 							if (strcmp(direct.DIR_Name, ".") == 0) {
@@ -574,40 +581,42 @@ int main(int argc, char *argv[]) {
 					}
 
 
-					//printf("%d\n", count3);
+
 				}
 				//printf("cp entered\n");
-				strncpy(create.DIR_Name, cmd2, 8);
-				unsigned short high = firstCLUSter >> 16;
-				unsigned short low = ((firstCLUSter << 16) >> 16);
-				create.DIR_Attr = 0X20;
-				create.DIR_FileSize = 0;
-				offset = (((low - 2)*capture4) + fileSec)*capture3;
-				//printf("%d\n", offset);
-				//printf("%d\n", low);
-				create.DIR_FstClusHI = high;
-				create.DIR_FstClusLO = low;
-				lseek(fileNumber, directoryOffset, SEEK_SET);
+				if (safe != 1) {
+					//printf("cp entered\n");
+					strncpy(create.DIR_Name, cmd2, 8);
+					unsigned short high = firstCLUSter >> 16;
+					unsigned short low = ((firstCLUSter << 16) >> 16);
+					create.DIR_Attr = 0X20;
+					create.DIR_FileSize = 0;
+					offset = (((low - 2)*capture4) + fileSec)*capture3;
+					//printf("%d\n", offset);
+					//printf("%d\n", low);
+					create.DIR_FstClusHI = high;
+					create.DIR_FstClusLO = low;
+					lseek(fileNumber, directoryOffset, SEEK_SET);
 
-				memcpy(keep6, &create, sizeof(struct DirectoryEntry));
-				//memset(keep6);
-				write(fileNumber, keep6, 32);
-
-
-
-
+					memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+					//memset(keep6);
+					write(fileNumber, keep6, 32);
 
 
 
 
 
+
+
+
+				}
 
 
 			}
 
 
-
-			printf("creat entered\n");
+			//printf("\n");
+			//printf("creat entered\n");
 		}
 		else if (strcmp(command, "mkdir") == 0) {
 			int count = 0;
@@ -694,23 +703,31 @@ int main(int argc, char *argv[]) {
 						read(fileNumber, name, 32);
 						memcpy(&direct, name, sizeof(struct DirectoryEntry));
 						one = strchr(direct.DIR_Name, ' ');
-						if (count2 * 32 >= bob.BPB_BytsPerSe) {
-							break;
-						}
 						if (one != NULL && 11 > (one - direct.DIR_Name)) {
 							direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
 						}
+						if ((strcmp(direct.DIR_Name, cmd2) == 0) && direct.DIR_Attr == 0x10) {
+							printf("this directory already exist\n");
+							safe = 1;
+							count4++;
+							break;
+						}
+						if (count2 * 32 >= bob.BPB_BytsPerSe) {
+							break;
+						}
 
-						if (direct.DIR_Name[0] == 0x0 && count2 * 32 < bob.BPB_BytsPerSe) {
-							directoryOffset = offset2 + (count2 * 32);
+						else if (direct.DIR_Name[0] == 0x0 && count2 * 32 < bob.BPB_BytsPerSe) {
+							if (directoryOffset == 0) {
+								directoryOffset = offset2 + (count2 * 32);
+							}
 							count4++;
 							break;
 						}
 						else if (direct.DIR_Name[0] == 0xE5) {
 							directoryOffset = offset2 + (count2 * 32);
-							count4++;
-							break;
-							//count2++;
+							count2++;
+
+							//
 						}
 						else {
 							if (strcmp(direct.DIR_Name, ".") == 0) {
@@ -755,37 +772,39 @@ int main(int argc, char *argv[]) {
 					//printf("%d\n", count3);
 				}
 				//printf("cp entered\n");
-				strncpy(create.DIR_Name, cmd2, 8);
-				unsigned short high = firstCLUSter >> 16;
-				unsigned short low = ((firstCLUSter << 16) >> 16);
-				create.DIR_Attr = 0X10;
-				create.DIR_FileSize = 0;
-				offset = (((low - 2)*capture4) + fileSec)*capture3;
-				//printf("%d\n", offset);
-				//printf("%d\n", low);
-				create.DIR_FstClusHI = high;
-				create.DIR_FstClusLO = low;
-				lseek(fileNumber, directoryOffset, SEEK_SET);
+				if (safe != 1) {
+					strncpy(create.DIR_Name, cmd2, 8);
+					unsigned short high = firstCLUSter >> 16;
+					unsigned short low = ((firstCLUSter << 16) >> 16);
+					create.DIR_Attr = 0X10;
+					create.DIR_FileSize = 0;
+					offset = (((low - 2)*capture4) + fileSec)*capture3;
+					//printf("%d\n", offset);
+					//printf("%d\n", low);
+					create.DIR_FstClusHI = high;
+					create.DIR_FstClusLO = low;
+					lseek(fileNumber, directoryOffset, SEEK_SET);
 
-				memcpy(keep6, &create, sizeof(struct DirectoryEntry));
-				//memset(keep6);
-				write(fileNumber, keep6, 32);
+					memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+					//memset(keep6);
+					write(fileNumber, keep6, 32);
 
 
-				strncpy(create.DIR_Name, ".", 8);
-				offset2 = (((firstCLUSter - 2)*capture4) + fileSec)*capture3;
-				lseek(fileNumber, offset2, SEEK_SET);
-				memcpy(keep6, &create, sizeof(struct DirectoryEntry));
-				write(fileNumber, keep6, 32);
-				strncpy(create.DIR_Name, "..", 8);
-				create.DIR_FstClusHI = capture2 >> 16;
-				create.DIR_FstClusLO = ((capture2 << 16) >> 16);
-				memcpy(keep6, &create, sizeof(struct DirectoryEntry));
-				write(fileNumber, keep6, 32);
-
+					strncpy(create.DIR_Name, ".", 8);
+					offset2 = (((firstCLUSter - 2)*capture4) + fileSec)*capture3;
+					lseek(fileNumber, offset2, SEEK_SET);
+					memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+					write(fileNumber, keep6, 32);
+					strncpy(create.DIR_Name, "..", 8);
+					create.DIR_FstClusHI = capture2 >> 16;
+					create.DIR_FstClusLO = ((capture2 << 16) >> 16);
+					memcpy(keep6, &create, sizeof(struct DirectoryEntry));
+					write(fileNumber, keep6, 32);
+				}
 
 			}
-			printf("mkdir entered\n");
+			//	printf("\n");
+				//printf("mkdir entered\n");
 		}
 		else if (strcmp(command, "mv") == 0) {
 			int count = 0;
@@ -1295,142 +1314,147 @@ int main(int argc, char *argv[]) {
 			if (strcmp(input_mode, "r") == 0 || strcmp(input_mode, "w") == 0 ||
 				strcmp(input_mode, "rw") == 0 || strcmp(input_mode, "wr") == 0) {
 
-					int count = 0;
-					int count2 = 0;
-					int count3 = 0;
-					int total = 0;
-					int offset2 = 0;
-					char keep[4];
-					char keep2[4];
-					struct DirectoryEntry direct;
-					unsigned char *one;
-					unsigned int newCap = capture2;
-					unsigned int newCap2 = capture2;
+				int count = 0;
+				int count2 = 0;
+				int count3 = 0;
+				int total = 0;
+				int offset2 = 0;
+				char keep[4];
+				char keep2[4];
+				struct DirectoryEntry direct;
+				unsigned char *one;
+				unsigned int newCap = capture2;
+				unsigned int newCap2 = capture2;
 
-					strcpy(cmd2, "");
+				strcpy(cmd2, "");
 
+				while (1)
+				{
+					offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap2 * 4));
+					offset2 = (((newCap2 - 2)*capture4) + fileSec)*capture3;
+					lseek(fileNumber, offsetCluster, SEEK_SET);
+					read(fileNumber, keep2, 4);
+					newCap = *(int*)keep2;
+					count = 0;
 					while (1)
 					{
-						offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap2 * 4));
-						offset2 = (((newCap2 - 2)*capture4) + fileSec)*capture3;
-						lseek(fileNumber, offsetCluster, SEEK_SET);
-						read(fileNumber, keep2, 4);
-						newCap = *(int*)keep2;
-						count = 0;
-						while (1)
-						{
-							lseek(fileNumber, offset + (count * 32), SEEK_SET);
-							read(fileNumber, name, 32);
-							memcpy(&direct, name, sizeof(struct DirectoryEntry));
-							one = strchr(direct.DIR_Name, ' ');
-							if (one != NULL && 11 > (one - direct.DIR_Name)) {
-								direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
+						lseek(fileNumber, offset + (count * 32), SEEK_SET);
+						read(fileNumber, name, 32);
+						memcpy(&direct, name, sizeof(struct DirectoryEntry));
+						one = strchr(direct.DIR_Name, ' ');
+						if (one != NULL && 11 > (one - direct.DIR_Name)) {
+							direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
 
+						}
+						if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
+							if (strcmp("", cmd2) == 0) {
+								newCap = capture2;
 							}
-							if (strcmp(direct.DIR_Name, cmd2) == 0 || strcmp("", cmd2) == 0 || ((rootDir - 1) == 0 && strcmp("..", cmd2) == 0) || ((rootDir) == 0 && strcmp(".", cmd2) == 0)) {
-								if (strcmp("", cmd2) == 0) {
-									newCap = capture2;
-								}
+							while (1)
+							{
+								offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap * 4));
+								offset2 = (((newCap - 2)*capture4) + fileSec)*capture3;
+								lseek(fileNumber, offsetCluster, SEEK_SET);
+								read(fileNumber, keep, 4);
+								newCap = *(int*)keep;
+								count3 = 0;
+								count2 = 0;
 								while (1)
 								{
-									offsetCluster = (bob.BPB_BytsPerSe * 32) + ((newCap * 4));
-									offset2 = (((newCap - 2)*capture4) + fileSec)*capture3;
-									lseek(fileNumber, offsetCluster, SEEK_SET);
-									read(fileNumber, keep, 4);
-									newCap = *(int*)keep;
-									count3 = 0;
-									count2 = 0;
-									while (1)
-									{
-										lseek(fileNumber, offset2 + (count2 * 32), SEEK_SET);
-										read(fileNumber, name, 32);
-										memcpy(&direct, name, sizeof(struct DirectoryEntry));
-										one = strchr(direct.DIR_Name, ' ');
-										if (count2 * 32 >= bob.BPB_BytsPerSe) {
-											break;
-										}
-										if (one != NULL && 11 > (one - direct.DIR_Name)) {
-											direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
-										}
-										if (direct.DIR_Name[0] == 0x0) {
-											break;
-										}
-										else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
-											count2++;
-										}
-										else {
-											if (direct.DIR_Attr == 0x20 && (strcmp(direct.DIR_Name, file_name) == 0)) {
-												if (SearchOpenFiles(file_name) == MAX_OPEN_FILES) {
-													// File not opened
+									lseek(fileNumber, offset2 + (count2 * 32), SEEK_SET);
+									read(fileNumber, name, 32);
+									memcpy(&direct, name, sizeof(struct DirectoryEntry));
+									one = strchr(direct.DIR_Name, ' ');
+									if (count2 * 32 >= bob.BPB_BytsPerSe) {
+										break;
+									}
+									if (one != NULL && 11 > (one - direct.DIR_Name)) {
+										direct.DIR_Name[(one - direct.DIR_Name)] = '\0';
+									}
+									if (direct.DIR_Name[0] == 0x0) {
+										printf("could not find file\n");
+										break;
+									}
+									else if (direct.DIR_Name[0] == 0xE5 || direct.DIR_Attr == 0x0F) {
+										count2++;
+									}
+									else {
+										if (direct.DIR_Attr == 0x20 && (strcmp(direct.DIR_Name, file_name) == 0)) {
+											if (SearchOpenFiles(file_name) == MAX_OPEN_FILES) {
+												// File not opened
 
-													struct DirectoryEntry * newEntry;
+												struct DirectoryEntry * newEntry;
 
-													newEntry = &openFiles.files[GetOpenFileSlot()];
-													//printf("Made it to here\n");
-													strcpy(newEntry->DIR_Name, direct.DIR_Name);
-													newEntry->DIR_Attr = direct.DIR_Attr;
-													newEntry->DIR_NTRes = direct.DIR_NTRes;
-													newEntry->DIR_CrtTimeTenth = direct.DIR_CrtTimeTenth;
-													newEntry->DIR_CrtTime = direct.DIR_CrtTime;
-													newEntry->DIR_CrtDate = direct.DIR_CrtDate;
-													newEntry->DIR_LstAccDate = direct.DIR_LstAccDate;
-													newEntry->DIR_FstClusHI = direct.DIR_FstClusHI;
-													newEntry->DIR_WrtTime = direct.DIR_WrtTime;
-													newEntry->DIR_WrtDate = direct.DIR_WrtDate;
-													newEntry->DIR_FstClusLO = direct.DIR_FstClusLO;
-													newEntry->DIR_FileSize = direct.DIR_FileSize;
-													if (strcmp(input_mode, "r") == 0) {
-														direct.DIR_Mode = 1;
-													}
-													else if (strcmp(input_mode, "w") == 0) {
-														direct.DIR_Mode = 2;
-													}
-													else if (strcmp(input_mode, "rw") == 0){
-														direct.DIR_Mode = 3;
-													}
-													else if (strcmp(input_mode, "wr") == 0){
-														direct.DIR_Mode = 4;
-													}
-													else {
-														printf("MODE INPUT ERROR\n");
-													}
-													newEntry->DIR_Mode = direct.DIR_Mode;
-													openFiles.count++;
-
-													printf("%s successfully opened\n", newEntry->DIR_Name);
+												newEntry = &openFiles.files[GetOpenFileSlot()];
+												//printf("Made it to here\n");
+												strcpy(newEntry->DIR_Name, direct.DIR_Name);
+												newEntry->DIR_Attr = direct.DIR_Attr;
+												newEntry->DIR_NTRes = direct.DIR_NTRes;
+												newEntry->DIR_CrtTimeTenth = direct.DIR_CrtTimeTenth;
+												newEntry->DIR_CrtTime = direct.DIR_CrtTime;
+												newEntry->DIR_CrtDate = direct.DIR_CrtDate;
+												newEntry->DIR_LstAccDate = direct.DIR_LstAccDate;
+												newEntry->DIR_FstClusHI = direct.DIR_FstClusHI;
+												newEntry->DIR_WrtTime = direct.DIR_WrtTime;
+												newEntry->DIR_WrtDate = direct.DIR_WrtDate;
+												newEntry->DIR_FstClusLO = direct.DIR_FstClusLO;
+												newEntry->DIR_FileSize = direct.DIR_FileSize;
+												if (strcmp(input_mode, "r") == 0) {
+													direct.DIR_Mode = 1;
+												}
+												else if (strcmp(input_mode, "w") == 0) {
+													direct.DIR_Mode = 2;
+												}
+												else if (strcmp(input_mode, "rw") == 0) {
+													direct.DIR_Mode = 3;
+												}
+												else if (strcmp(input_mode, "wr") == 0) {
+													direct.DIR_Mode = 4;
 												}
 												else {
-													// File already exists
-													fprintf(stderr, "%s already has been opened\n", file_name);
-													continue;
+													printf("MODE INPUT ERROR\n");
 												}
-												count2++;
+												newEntry->DIR_Mode = direct.DIR_Mode;
+												openFiles.count++;
+
+												printf("%s successfully opened\n", newEntry->DIR_Name);
+												count3++;
+												break;
+											}
+											else {
+												// File already exists
+												printf("%s already has been opened\n", file_name);
+												count3++;
+												break;
+
 											}
 											count2++;
 										}
-									}
-									if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
-										break;
+										count2++;
 									}
 								}
-								count3++;
-								break;
+								if (*(int*)keep == 0x0FFFFFFF || *(int*)keep == 0x0FFFFFFE || *(int*)keep == 0x0FFFFFF8) {
+									break;
+								}
 							}
-							else {
-								count++;
-							}
-						}
-						if (*(int*)keep2 == 0x0FFFFFFF || *(int*)keep2 == 0x0FFFFFFE || *(int*)keep2 == 0x0FFFFFF8 || count3 != 0) {
+							count3++;
 							break;
 						}
+						else {
+							count++;
+						}
 					}
+					if (*(int*)keep2 == 0x0FFFFFFF || *(int*)keep2 == 0x0FFFFFFE || *(int*)keep2 == 0x0FFFFFF8 || count3 != 0) {
+						break;
+					}
+				}
 			}
 			else {
-				fprintf(stderr, "%s is not a valid mode input\n", input_mode);
-				continue;
+				printf("%s is not a valid mode input\n", input_mode);
+
 			}
 
-			PrintOpenFiles();
+
 		}
 		else if (strcmp(command, "close") == 0) {
 
@@ -1440,34 +1464,34 @@ int main(int argc, char *argv[]) {
 				scanf("%s", file_name);
 			}
 
-				int lookupIndex;
-				lookupIndex = SearchOpenFiles(file_name);
-				if (lookupIndex < MAX_OPEN_FILES) {
-					struct DirectoryEntry * newEntry;
+			int lookupIndex;
+			lookupIndex = SearchOpenFiles(file_name);
+			if (lookupIndex < MAX_OPEN_FILES) {
+				struct DirectoryEntry * newEntry;
 
-					newEntry = &openFiles.files[lookupIndex];
-					newEntry->DIR_Name[0] = '\0';
-					newEntry->DIR_Attr = '\0';
-					newEntry->DIR_NTRes = '\0';
-					newEntry->DIR_CrtTimeTenth = '\0';
-					newEntry->DIR_CrtTime = 0;
-					newEntry->DIR_CrtDate = 0;
-					newEntry->DIR_LstAccDate = 0;
-					newEntry->DIR_FstClusHI = 0;
-					newEntry->DIR_WrtTime = 0;
-					newEntry->DIR_WrtDate = 0;
-					newEntry->DIR_FstClusLO = 0;
-					newEntry->DIR_FileSize = 0;
-					newEntry->DIR_Mode = 0;
-					openFiles.count--;
+				newEntry = &openFiles.files[lookupIndex];
+				newEntry->DIR_Name[0] = '\0';
+				newEntry->DIR_Attr = '\0';
+				newEntry->DIR_NTRes = '\0';
+				newEntry->DIR_CrtTimeTenth = '\0';
+				newEntry->DIR_CrtTime = 0;
+				newEntry->DIR_CrtDate = 0;
+				newEntry->DIR_LstAccDate = 0;
+				newEntry->DIR_FstClusHI = 0;
+				newEntry->DIR_WrtTime = 0;
+				newEntry->DIR_WrtDate = 0;
+				newEntry->DIR_FstClusLO = 0;
+				newEntry->DIR_FileSize = 0;
+				newEntry->DIR_Mode = 0;
+				openFiles.count--;
 
-					printf("%s successfully closed\n", file_name);
-				}
-				else {
-					fprintf(stderr, "%s is not opened\n", file_name);
-				}
+				printf("%s successfully closed\n", file_name);
+			}
+			else {
+				printf("%s is not opened\n", file_name);
+			}
 
-			PrintOpenFiles();
+			//PrintOpenFiles();
 
 		}
 		else if (strcmp(command, "read") == 0) {
@@ -1543,7 +1567,7 @@ int main(int argc, char *argv[]) {
 						}
 						if (direct.DIR_Name[0] == 0x0 || (rootDir == 0 && strcmp("..", cmd2) == 0)) {
 							//	printf("%s", "HELLO4");
-							printf("%s \n", "FILE doesnt exist");
+							printf("%s \n", "File doesnt exist");
 							count3++;
 							break;
 						}
@@ -1663,6 +1687,7 @@ int main(int argc, char *argv[]) {
 											offsetSize = 0;
 											count3++;
 											fwrite(name2, sizeof(char), sizeRead, stdout);
+											printf("\n");
 
 										}
 										if (direct.DIR_Name[0] == 0x0) {
@@ -1714,6 +1739,12 @@ int main(int argc, char *argv[]) {
 								count3++;
 								break;
 							}
+							else {
+								count3++;
+								break;
+
+							}
+
 						}
 						//count++;
 						else {
@@ -1730,10 +1761,10 @@ int main(int argc, char *argv[]) {
 				}
 
 				if (srlCheck != 1) {
-					fprintf(stderr, "%s is not opened or not opened as a writable file\n", direct.DIR_Name);
+					printf("%s is not opened or not opened as a readable file\n", direct.DIR_Name);
 				}
 
-				printf("read entered\n");
+				//printf("read entered\n");
 			}
 		}
 		else if (strcmp(command, "write") == 0) {
@@ -2008,6 +2039,11 @@ int main(int argc, char *argv[]) {
 								count3++;
 								break;
 							}
+							else {
+								count3++;
+								break;
+
+							}
 
 						}
 						//count++;
@@ -2028,10 +2064,10 @@ int main(int argc, char *argv[]) {
 			}
 
 			if (srlCheck != 1) {
-				fprintf(stderr, "%s is not opened or not opened as a writable file\n", direct.DIR_Name);
+				printf("%s is not opened or not opened as a writable file\n", direct.DIR_Name);
 			}
 
-			printf("write entered\n");
+			//printf("write entered\n");
 		}
 		else if (strcmp(command, "size") == 0) {
 
@@ -2273,7 +2309,7 @@ int main(int argc, char *argv[]) {
 					}
 				}
 
-				printf("remove entered\n");
+				//printf("remove entered\n");
 			}
 
 		}
@@ -2951,12 +2987,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }*/
 
-void PrintOpenFiles() {
-	int srl;
-	for (srl = 0; srl < openFiles.count; srl++) {
-		printf("%s\n", openFiles.files[srl].DIR_Name);
-	}
-}
+
 
 int GetOpenFileSlot() {
 	int rValue = 0;
@@ -2966,7 +2997,7 @@ int GetOpenFileSlot() {
 		}
 		rValue++;
 	}
-	fprintf(stderr, "Already opened max number of files\n");
+	printf("Already opened max number of files\n");
 	return 64;
 }
 
