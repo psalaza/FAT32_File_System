@@ -1638,6 +1638,7 @@ int main(int argc, char *argv[]) {
 
 									count3 = 0;
 									if (fileSize < offsetSize) {
+										printf("The file size is less then offset size\n");
 										count3++;
 										break;
 
@@ -1799,7 +1800,7 @@ int main(int argc, char *argv[]) {
 
 			}
 			else {
-				scanf("%s %s %s \"%[^\"]%[^\n]", cmd2, keep3, keep4, string, pointless);
+				scanf("%s %s %s \"%[^\"]*s\n", cmd2, keep3, keep4, string);
 
 				offsetSize = atoi(keep3);
 				sizeRead = atoi(keep4);
@@ -1897,6 +1898,7 @@ int main(int argc, char *argv[]) {
 								while (1)
 								{
 									if (fileSize < offsetSize) {
+										printf("The file size is less then offset size\n");
 										count3++;
 										break;
 									}
