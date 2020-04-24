@@ -1,2 +1,4 @@
-all:
-  gcc main.c -o project3
+all: main.c
+	gcc main.c
+clean:
+	rm a.out
