@@ -7,10 +7,10 @@ Group Members: Charles Harris, Pedro Salazar, Spencer Lewis
 File Listing:<br/>
 Directory - OpSys3 contains:<br/>
   README.md - this file: includes file descriptions, compilation instructions, division of labor, and known bugs<br/>
-  Makefile - Used to compile, declare new system calls for when kernel is compiled<br/>
-  sys_start_elevator.c, sys_issue_request.c, sys_stop_elevator.c - Each file<br/>
-  contains the syscall pointer and wrapper functions used to compile the added<br/>
-  system calls
+  Makefile - Used to compile executable and remove executable when finished<br/>
+  main.c - <br/>
+  fat32.img - FAT32 file system image file used for demo<br/>
+  commitLog - screenshot of commits made to git repository<br/>
     
 Makefile Description:<br/>
 In order to compile the executable, run:<br/>
@@ -24,7 +24,7 @@ make clean<br/><br/>
 Division of Labor:<br/><br/>
 
   Charles Harris:<br/>
-  exit, info, size, ls commands<br/>
+  info, size, ls, cd commands<br/>
   creat command<br/>
   mkdir command<br/>
   mv command<br/>
@@ -32,7 +32,7 @@ Division of Labor:<br/><br/>
   Commenting, Testing, and Reviewing other sections of project (Steps 2 and 3)<br/><br/>
   
   Pedro Salazar:<br/>
-  cd command<br/>
+  exit command<br/>
   Makefile<br/>
   Additional work on creat and mkdir commands<br/>
   Commenting, Testing, and Reviewing other sections of project<br/><br/>
