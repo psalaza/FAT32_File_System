@@ -11,7 +11,7 @@ Directory - OpSys3 contains:<br/>
   main.c - <br/>
   fat32.img - FAT32 file system image file used for demo<br/>
   commitLog.pdf - screenshot of commits made to git repository<br/>
-    
+
 Makefile Description:<br/>
 In order to compile the executable, run:<br/>
 make<br/>
@@ -27,21 +27,21 @@ Division of Labor:<br/>
   info, size, ls, cd commands<br/>
   creat command<br/>
   mkdir command<br/>
-  mv command<br/>
+  mv and cp commands<br/>
   read/write commands<br/>
-  Commenting, Testing, and Reviewing other sections of project (Steps 2 and 3)<br/><br/>
-  
+  Commenting, Testing, and Reviewing other sections of project<br/><br/>
+
   Pedro Salazar:<br/>
   exit command<br/>
   Makefile<br/>
   Additional work on creat and mkdir commands<br/>
   Commenting, Testing, and Reviewing other sections of project<br/><br/>
-  
+
   Spencer Lewis:<br/>
   open command<br/>
   close command<br/>
   Additional work on read and write commands<br/>
   README file<br/>
   Commenting, Testing, and Reviewing other sections of project<br/><br/>
-  
+
 No Known Bugs at this time.
