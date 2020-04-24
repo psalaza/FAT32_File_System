@@ -1801,7 +1801,7 @@ int main(int argc, char *argv[]) {
 			}
 			else {
 				scanf("%s %s %s \"%[^\"]*s\n", cmd2, keep3, keep4, string);
-
+				getchar();
 				offsetSize = atoi(keep3);
 				sizeRead = atoi(keep4);
 				//printf("%d\n", offsetSize);
