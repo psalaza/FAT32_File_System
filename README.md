@@ -34,6 +34,8 @@ Division of Labor:<br/>
   Pedro Salazar:<br/>
   exit command<br/>
   Makefile<br/>
+  Structure of project <br/>
+  Parsing user input <br/>
   Additional work on creat and mkdir commands<br/>
   Commenting, Testing, and Reviewing other sections of project<br/><br/>
 
